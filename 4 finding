@@ -1,0 +1,37 @@
+def main():
+    final_prompt = "Explain what artificial intelligence is in simple terms."
+    temperature = 0.5
+    max_tokens_list = [20, 50, 200]
+
+    for max_tokens in max_tokens_list:
+        print("\n" + "="*40)
+        print(f"Temperature: {temperature} | Max Tokens: {max_tokens}")
+        print("="*40)
+        response = generate_answer(final_prompt, temperature=temperature, max_tokens=max_tokens)
+        print(response)
+
+if __name__ == "__main__":
+    main()
+
+實驗總結 - AI 回答溫度與輸出長度控制
+
+1. 溫度 (temperature) 變化的影響：
+   - 當溫度從 0.0 提升到 1.0，回答變得越來越有創意與多樣性。  
+   - 低溫度（如 0.0）時，模型回答較為直接、事實性強，內容穩定且重複性高。  
+   - 高溫度（如 1.0）時，回答較豐富，會加入比喻、延伸說明，甚至跳脫原本話題。
+
+   適合低溫度的情況包括需要精確答案的技術、法律或醫療領域；  
+   適合高溫度的情況則是需要創意寫作、故事講述或腦力激盪時。
+
+2. max_output_tokens 限制的影響及實務案例：
+   - 當回答達到 max_output_tokens 的限制時，回覆會被強制截斷，有時會中斷在句子中間。  
+   - 這個限制可幫助控制回應長度，節省 API 使用成本，並確保回答適合在有限空間（如簡訊或手機介面）顯示。
+
+   實務上，如果系統要在手機 App 內顯示訊息、或發送 SMS 時，通常會限制回答長度避免溢出。
+
+3. 結合溫度與最大 token 數控制回答風格：
+   - 想要短且有創意的回答，可設定較高溫度（例如 0.8~1.0）與較低 max_tokens（如 50）。  
+   - 想要長且事實性的回答，可設定較低溫度（如 0.0~0.3）與較高 max_tokens（如 200 或以上）。
+
+總結：
+調整這兩個參數能靈活控制 AI 回答的「風格」與「長度」，根據需求調整適合的組合，使模型在不同應用場景中表現最佳。
