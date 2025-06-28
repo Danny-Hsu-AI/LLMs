@@ -1,0 +1,58 @@
+import os
+import google.generativeai as genai
+from google.generativeai.types import GenerationConfig
+
+def generate_answer(prompt: str, temperature: float, max_tokens: int):
+    """使用 Gemini Pro API 根據溫度和最大 token 數量生成回答"""
+    gemini_api_key = os.getenv("AIzaSyDceM6k-RNXffnGd-l0-EcMbLxZHL88GZA")
+    if not gemini_api_key:
+        raise ValueError("❌ 未設定 GEMINI_API_KEY 環境變數")
+    
+    genai.configure(api_key=gemini_api_key)
+    model = genai.GenerativeModel('gemini-pro')
+
+    generation_config = GenerationConfig(
+        temperature=temperature,
+        max_output_tokens=max_tokens
+    )
+
+    result = model.generate_content(prompt, generation_config=generation_config)
+    return result.text
+
+def main():
+    final_prompt = "用簡單的方式解釋什麼是人工智慧。"
+
+    print("\n" + "#" * 70)
+    print("🔥 溫度 (temperature) 影響測試")
+    print("#" * 70)
+    temperatures = [0.0, 0.5, 1.0]
+    max_tokens_fixed = 200
+
+    for temp in temperatures:
+        print("\n" + "=" * 50)
+        print(f"溫度: {temp} | 最大輸出 Token 數: {max_tokens_fixed}")
+        print("=" * 50)
+        try:
+            response = generate_answer(final_prompt, temperature=temp, max_tokens=max_tokens_fixed)
+            print(response.strip())
+        except Exception as e:
+            print(f"❌ 產生回答錯誤，溫度={temp}: {e}")
+
+    print("\n" + "#" * 70)
+    print("⏳ 最大輸出長度 (max_tokens) 影響測試")
+    print("#" * 70)
+    temperature_fixed = 0.5
+    max_tokens_list = [20, 50, 200]
+
+    for max_tokens in max_tokens_list:
+        print("\n" + "=" * 50)
+        print(f"溫度: {temperature_fixed} | 最大輸出 Token 數: {max_tokens}")
+        print("=" * 50)
+        try:
+            response = generate_answer(final_prompt, temperature=temperature_fixed, max_tokens=max_tokens)
+            print(response.strip())
+        except Exception as e:
+            print(f"❌ 產生回答錯誤，max_tokens={max_tokens}: {e}")
+
+if __name__ == "__main__":
+    main()
